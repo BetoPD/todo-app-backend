@@ -1,0 +1,17 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore environment variables
+.env
+
+# Ignore logs
+*.log
+
+# Ignore the npm debug log file
+npm-debug.log*
+
+# Ignore the .DS_Store directory
+.DS_Store
+
+# Ignore dist directory
+/dist
