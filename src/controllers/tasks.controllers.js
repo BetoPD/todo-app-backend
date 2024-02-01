@@ -16,16 +16,16 @@ export const getTasks = async (req, res, next) => {
 };
 
 export const getTask = async (req, res, next) => {
-  // Id of the task to retrieve
-  const { id } = req.params;
   try {
+    // Id of the task to retrieve
+    const { id } = req.params;
     // Query to select the specific task
     const task = await pool.query(
       'SELECT * FROM Tasks WHERE Tasks.id = ? AND Tasks.userId = ?',
       [id, req.user.id]
     );
     // checks if the task exists
-    if (!task[0][0]) throw new Error('No task founded');
+    if (!task[0][0]) return res.status(404).json({ message: 'Task not found' });
     // if it exists it sends it
     res.json(task[0]);
   } catch (error) {
@@ -34,9 +34,9 @@ export const getTask = async (req, res, next) => {
 };
 
 export const createTask = async (req, res, next) => {
-  // Data send in the body of the request
-  const { text, dueDate, postDate } = req.body;
   try {
+    // Data send in the body of the request
+    const { text, dueDate, postDate } = req.body;
     // Creates a task
     const newTask = await pool.query(
       'INSERT INTO Tasks (userId, text, dueDate, postDate) VALUES (?, ?, ?, ?)',
@@ -50,12 +50,11 @@ export const createTask = async (req, res, next) => {
 };
 
 export const updateTask = async (req, res, next) => {
-  // Id of the task to be udpated
-  const { id } = req.params;
-  //   Things that can be udpated
-  const { text, postDate } = req.body;
-
   try {
+    // Id of the task to be udpated
+    const { id } = req.params;
+    //   Things that can be udpated
+    const { text, postDate } = req.body;
     // Query to update the task
     const updatedTask = await pool.query(
       `UPDATE Tasks 
@@ -75,10 +74,9 @@ export const updateTask = async (req, res, next) => {
 };
 
 export const deleteTask = async (req, res, next) => {
-  // id of the task to be deleted
-  const { id } = req.params;
-
   try {
+    // id of the task to be deleted
+    const { id } = req.params;
     // query to delete the task
     const deletedTask = await pool.query(
       `DELETE FROM Tasks
