@@ -36,11 +36,11 @@ export const getTask = async (req, res, next) => {
 export const createTask = async (req, res, next) => {
   try {
     // Data send in the body of the request
-    const { text, dueDate, postDate } = req.body;
+    const { title, text, dueDate, postDate } = req.body;
     // Creates a task
     const newTask = await pool.query(
-      'INSERT INTO Tasks (userId, text, dueDate, postDate) VALUES (?, ?, ?, ?)',
-      [req.user.id, text, dueDate, postDate]
+      'INSERT INTO Tasks (userId, title, text, dueDate, postDate) VALUES (?, ?, ?, ?, ?)',
+      [req.user.id, title, text, dueDate, postDate]
     );
     // Sends the created task
     res.json(newTask[0]);
@@ -54,14 +54,15 @@ export const updateTask = async (req, res, next) => {
     // Id of the task to be udpated
     const { id } = req.params;
     //   Things that can be udpated
-    const { text, postDate } = req.body;
+    const { title, text, postDate } = req.body;
     // Query to update the task
     const updatedTask = await pool.query(
       `UPDATE Tasks 
-      SET Tasks.text = ?, Tasks.postDate = ? 
+      SET 
+        Tasks.title = ?, Tasks.text = ?, Tasks.postDate = ? 
       WHERE 
         Tasks.id = ? AND Tasks.userId = ?`,
-      [text, postDate, id, req.user.id]
+      [title, text, postDate, id, req.user.id]
     );
     // Checks if there was a matching task
     if (updatedTask[0].affectedRows === 0)
