@@ -10,14 +10,9 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use(express.json());
-
 // Error-handling middleware for JSON syntax errors
 app.use(validateJSON);
 
-app.use(cookieParser());
-app.use('/api', authRouter);
-app.use('/api', tasksRouter);
 app.use(cookieParser());
 app.use('/api', authRouter);
 app.use('/api', tasksRouter);

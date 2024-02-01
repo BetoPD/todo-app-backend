@@ -14,14 +14,10 @@ export const createUpdateTaskSchema = z.object({
     .string({
       required_error: 'No date provided',
     })
-    .datetime({
-      message: 'Not date time type',
-    }),
+    .refine((value) => /^\d{4}-\d{2}-\d{2}$/),
   dueDate: z
     .string({
       required_error: 'No date provided',
     })
-    .datetime({
-      message: 'Not date time type',
-    }),
+    .refine((value) => /^\d{4}-\d{2}-\d{2}$/),
 });

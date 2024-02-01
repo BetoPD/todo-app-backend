@@ -43,7 +43,7 @@ export const createTask = async (req, res, next) => {
       [req.user.id, text, dueDate, postDate]
     );
     // Sends the created task
-    res.json(newTask);
+    res.json(newTask[0]);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -65,7 +65,8 @@ export const updateTask = async (req, res, next) => {
       [text, postDate, id, req.user.id]
     );
     // Checks if there was a matching task
-    if (updatedTask[0].affectedRows === 0) throw new Error('No matching task');
+    if (updatedTask[0].affectedRows === 0)
+      return res.status(404).json({ message: 'Task not found' });
     // sends the updated task
     res.json(updatedTask[0]);
   } catch (error) {
@@ -86,7 +87,8 @@ export const deleteTask = async (req, res, next) => {
       [id, req.user.id]
     );
     // checks if there was a matching task
-    if (deletedTask[0].affectedRows === 0) throw new Error('Not matching task');
+    if (deletedTask[0].affectedRows === 0)
+      return res.status(404).json({ message: 'Task not found' });
     // Sends the deleted task
     res.json(deletedTask[0]);
   } catch (error) {
