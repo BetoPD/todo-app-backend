@@ -11,10 +11,13 @@ export const register = async (req, res, next) => {
       'INSERT INTO Users (email, password, username) VALUES (?, ?, ?)',
       [email, passwordHash, username]
     );
-
     const token = await createAccessToken({ id: newUser[0].insertId });
     res.cookie('token', token);
-    res.json({ message: 'User created successfully' });
+    const user = await pool.query(
+      'SELECT username, email FROM Users WHERE Users.Id = ?',
+      newUser[0].insertId
+    );
+    res.json(user[0][0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -37,7 +40,8 @@ export const login = async (req, res, next) => {
 
     const token = await createAccessToken({ id: userFound[0][0].Id });
     res.cookie('token', token);
-    res.json({ message: 'Access' });
+    delete userFound[0][0].password;
+    res.json(userFound[0][0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
