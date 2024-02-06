@@ -27,7 +27,7 @@ export const getTask = async (req, res, next) => {
     // checks if the task exists
     if (!task[0][0]) return res.status(404).json({ message: 'Task not found' });
     // if it exists it sends it
-    res.json(task[0]);
+    res.json(task[0][0]);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -43,7 +43,7 @@ export const createTask = async (req, res, next) => {
       [req.user.id, title, text, dueDate, postDate]
     );
     // Sends the created task
-    res.json(newTask[0]);
+    res.json({ id: newTask[0].insertId, title, text, dueDate, postDate });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -54,21 +54,21 @@ export const updateTask = async (req, res, next) => {
     // Id of the task to be udpated
     const { id } = req.params;
     //   Things that can be udpated
-    const { title, text, postDate } = req.body;
+    const { title, text, postDate, dueDate } = req.body;
     // Query to update the task
     const updatedTask = await pool.query(
       `UPDATE Tasks 
       SET 
-        Tasks.title = ?, Tasks.text = ?, Tasks.postDate = ? 
+        Tasks.title = ?, Tasks.text = ?, Tasks.postDate = ?, dueDate = ?
       WHERE 
         Tasks.id = ? AND Tasks.userId = ?`,
-      [title, text, postDate, id, req.user.id]
+      [title, text, postDate, dueDate, id, req.user.id]
     );
     // Checks if there was a matching task
     if (updatedTask[0].affectedRows === 0)
       return res.status(404).json({ message: 'Task not found' });
     // sends the updated task
-    res.json(updatedTask[0]);
+    res.json({ id, title, text, postDate });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -89,7 +89,7 @@ export const deleteTask = async (req, res, next) => {
     if (deletedTask[0].affectedRows === 0)
       return res.status(404).json({ message: 'Task not found' });
     // Sends the deleted task
-    res.json(deletedTask[0]);
+    res.json({ id: id });
   } catch (error) {
     res.status(400).json({ message: 'Bad Request', error: error.message });
   }
