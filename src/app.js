@@ -7,7 +7,11 @@ import tasksRouter from './routes/tasks.routes.js';
 import { validateJSON } from './middlewares/validateJSON.js';
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+  })
+);
 
 // Adds a logger to the app
 app.use(morgan('dev'));

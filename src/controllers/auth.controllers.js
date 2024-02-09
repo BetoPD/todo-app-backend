@@ -19,7 +19,7 @@ export const register = async (req, res, next) => {
     );
     res.json(user[0][0]);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(409).json({ message: error.sqlMessage });
   }
 };
 
@@ -32,18 +32,20 @@ export const login = async (req, res, next) => {
       email
     );
 
-    if (!userFound[0][0]) throw new Error('Not found');
+    if (!userFound[0][0])
+      return res.status(400).json({ message: 'User does not exists' });
 
     const isMatch = await bcrypt.compare(password, userFound[0][0].password);
 
-    if (!isMatch) throw new Error('Invalid credentials');
+    if (!isMatch)
+      return res.status(400).json({ message: 'Incorrect email or password' });
 
     const token = await createAccessToken({ id: userFound[0][0].Id });
     res.cookie('token', token);
     delete userFound[0][0].password;
     res.json(userFound[0][0]);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.sqlMessage });
   }
 };
 
