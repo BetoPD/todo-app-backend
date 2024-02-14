@@ -4,6 +4,7 @@ import {
   register,
   logout,
   profile,
+  verify,
 } from '../controllers/auth.controllers.js';
 import { authRequired } from '../middlewares/validateToken.js';
 import { validateSchema } from '../middlewares/validator.middleware.js';
@@ -15,5 +16,6 @@ router.post('/register', validateSchema(registerSchema), register);
 router.post('/login', validateSchema(loginSchema), login);
 router.post('/logout', logout);
 router.get('/profile', authRequired, profile);
+router.get('/verify', verify);
 
 export default router;

@@ -7,9 +7,11 @@ import tasksRouter from './routes/tasks.routes.js';
 import { validateJSON } from './middlewares/validateJSON.js';
 
 const app = express();
+
 app.use(
   cors({
     origin: 'http://localhost:3000',
+    credentials: true,
   })
 );
 

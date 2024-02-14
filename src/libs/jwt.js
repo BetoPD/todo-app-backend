@@ -7,7 +7,7 @@ export function createAccessToken(payload) {
       payload,
       TOKEN_SECRET,
       {
-        expiresIn: Math.floor(Date.now() / 1000) + 60 * 60,
+        expiresIn: '1h',
       },
       (err, token) => {
         if (err) reject(err);

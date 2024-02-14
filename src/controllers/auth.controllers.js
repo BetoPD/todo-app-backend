@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
 import pool from '../db.js';
+import jwt from 'jsonwebtoken';
 import { createAccessToken } from '../libs/jwt.js';
+import { TOKEN_SECRET } from '../config.js';
 
 export const register = async (req, res, next) => {
   const { email, password, username } = req.body;
@@ -38,7 +40,7 @@ export const login = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, userFound[0][0].password);
 
     if (!isMatch)
-      return res.status(400).json({ message: 'Incorrect email or password' });
+      return res.status(400).json({ message: 'Incorrect password' });
 
     const token = await createAccessToken({ id: userFound[0][0].Id });
     res.cookie('token', token);
@@ -73,4 +75,24 @@ export const profile = async (req, res, next) => {
   } catch (error) {
     res.json({ message: error.message });
   }
+};
+
+export const verify = async (req, res, next) => {
+  const { token } = req.cookies;
+
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+  jwt.verify(token, TOKEN_SECRET, async (err, user) => {
+    if (err) return res.status(401).json({ message: 'Unauthorized' });
+    const { id } = user;
+    const userFound = await pool.query(
+      'SELECT Id, email, username FROM Users WHERE Users.Id = ?',
+      id
+    );
+
+    if (!userFound[0][0])
+      return res.status(401).json({ message: 'Unauthorized' });
+
+    res.json(userFound[0][0]);
+  });
 };
