@@ -55,6 +55,7 @@ export const updateTask = async (req, res, next) => {
     const { id } = req.params;
     //   Things that can be udpated
     const { title, text, postDate, dueDate } = req.body;
+    console.log(title, text, postDate, dueDate);
     // Query to update the task
     const updatedTask = await pool.query(
       `UPDATE Tasks 
