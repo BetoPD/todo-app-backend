@@ -14,7 +14,11 @@ export const register = async (req, res, next) => {
       [email, passwordHash, username]
     );
     const token = await createAccessToken({ id: newUser[0].insertId });
-    res.cookie('token', token);
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
     const user = await pool.query(
       'SELECT username, email FROM Users WHERE Users.Id = ?',
       newUser[0].insertId
@@ -43,7 +47,11 @@ export const login = async (req, res, next) => {
       return res.status(400).json({ message: 'Incorrect password' });
 
     const token = await createAccessToken({ id: userFound[0][0].Id });
-    res.cookie('token', token);
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
     delete userFound[0][0].password;
     res.json(userFound[0][0]);
   } catch (error) {
