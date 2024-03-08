@@ -11,6 +11,7 @@ export const getTasks = async (req, res, next) => {
     // Sends the selected tasks from the database
     res.json(tasks[0]);
   } catch (error) {
+    console.log(error.message);
     res.json({ message: error.message });
   }
 };
