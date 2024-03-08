@@ -5,12 +5,13 @@ import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.routes.js';
 import tasksRouter from './routes/tasks.routes.js';
 import { validateJSON } from './middlewares/validateJSON.js';
+import { FRONTEND_URL } from './config.js';
 
 const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: FRONTEND_URL,
     credentials: true,
   })
 );

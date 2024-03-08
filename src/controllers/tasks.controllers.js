@@ -55,7 +55,6 @@ export const updateTask = async (req, res, next) => {
     const { id } = req.params;
     //   Things that can be udpated
     const { title, text, postDate, dueDate } = req.body;
-    console.log(title, text, postDate, dueDate);
     // Query to update the task
     const updatedTask = await pool.query(
       `UPDATE Tasks 
@@ -69,7 +68,7 @@ export const updateTask = async (req, res, next) => {
     if (updatedTask[0].affectedRows === 0)
       return res.status(404).json({ message: 'Task not found' });
     // sends the updated task
-    res.json({ id, title, text, postDate });
+    res.json({ id, title, text, dueDate, postDate });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
