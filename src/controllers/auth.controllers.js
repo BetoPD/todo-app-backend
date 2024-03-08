@@ -49,7 +49,7 @@ export const login = async (req, res, next) => {
     const token = await createAccessToken({ id: userFound[0][0].Id });
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'none',
     });
     delete userFound[0][0].password;
